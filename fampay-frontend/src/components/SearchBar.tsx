@@ -1,21 +1,28 @@
-import { Box, Input, Text } from '@chakra-ui/react'
-import React from 'react'
+import { Box, Input, Text } from "@chakra-ui/react";
+import React from "react";
 
-export default function Searchbar() {
-  const [value, setValue] = React.useState('')
-  const handleChange = (event: { target: { value: React.SetStateAction<string> } }) => setValue(event.target.value)
+interface IProps {
+  searchText: string;
+  setSearchText: (text: string) => void;
+}
+
+const Searchbar: React.FC<IProps> = ({ searchText, setSearchText }) => {
+  const handleChange = (event: { target: { value: string } }) =>
+    setSearchText(event.target.value);
 
   return (
     <>
-    <Box padding={10}>
-      <Input
-        value={value}
-        onChange={handleChange}
-        placeholder="Can't find what you are looking for? Search here..."
-        size='sm'
-        // margin={10}
-      />
+      <Box padding={10}>
+        <Input
+          value={searchText}
+          onChange={handleChange}
+          placeholder="Can't find what you are looking for? Search here..."
+          size="sm"
+          // margin={10}
+        />
       </Box>
     </>
-  )
-}
+  );
+};
+
+export default Searchbar;

@@ -14,8 +14,11 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import ReactPaginate from "react-paginate";
 import "./DisplayTable.css";
+import DropDownSort from "./DropDownSort";
+import Searchbar from "./SearchBar";
 
 export default function DisplayTable() {
+  const [searchText, setSearchText] = useState<string>("");
   const [results, setResults] = useState<any[]>([]);
   const [pages, setPages] = useState<number>(0);
   const [offset, setOffset] = useState<number>(0);
@@ -47,31 +50,70 @@ export default function DisplayTable() {
     setOffset(newOffset);
   };
 
+  const fetchSearchResults = async () => {
+    const url =
+      process.env.REACT_APP_BACKEND_URL +
+      `/api/search?q=${searchText}&offset=${offset}`;
+
+    try {
+      const res = await axios.get(url);
+      console.log(res);
+
+      setResults(res.data.videos);
+      setPages(res.data.pages);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
-    fetchResults();
-  }, [offset]);
+    if (searchText.length > 0) {
+      const timeout = setTimeout(() => {
+        fetchSearchResults();
+      }, 500);
+
+      return () => {
+        clearTimeout(timeout);
+      };
+    } else {
+      fetchResults();
+    }
+  }, [searchText, offset]);
+
+  // useEffect(() => {
+  //   fetchResults();
+  // }, []);
+
   return (
     <>
+      <Searchbar
+        searchText={searchText}
+        setSearchText={(text) => setSearchText(text)}
+      />
+      <DropDownSort />
+
       <Box padding={10}>
         <TableContainer>
-          <Table variant="striped" colorScheme="teal">
+          <Table variant="striped" colorScheme="teal" maxW="100vw">
             <Thead>
               <Tr>
+                <Th>Thumbnail</Th>
                 <Th>Title</Th>
                 <Th>Description</Th>
                 <Th>Channel Name</Th>
-                <Th>Thumbnail</Th>
+                <Th>Published At</Th>
               </Tr>
             </Thead>
-            <Tbody>
+            <Tbody maxW="100vw">
               {results.map((result, i) => (
                 <Tr key={i}>
+                  <Td>
+                    <Image src={result.thumbnail_url} borderRadius="10%" />
+                  </Td>
                   <Td>{result.name}</Td>
                   <Td>{result.description}</Td>
                   <Td>{result.channel_name}</Td>
-                  <Td>
-                    <Image src={result.thumbnail_url} />
-                  </Td>
+                  <Td>{result.published_at}</Td>
                 </Tr>
               ))}
             </Tbody>

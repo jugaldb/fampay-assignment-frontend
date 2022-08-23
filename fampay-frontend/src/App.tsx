@@ -5,7 +5,6 @@ import DisplayTable from "./components/DisplayTable";
 
 export const App = () => (
   <ChakraProvider theme={theme}>
-    <Searchbar />
     <DisplayTable />
   </ChakraProvider>
 );
