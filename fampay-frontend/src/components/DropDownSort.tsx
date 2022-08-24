@@ -2,13 +2,13 @@ import { Box, Select } from "@chakra-ui/react";
 import React from "react";
 
 interface IProps {
-  searchText: string;
-  setSearchText: (text: string) => void;
+  sortText: string;
+  setSortText: (text: string) => void;
 }
 
-const DropDownSort = () => {
-  // const handleChange = (event: { target: { value: string } }) =>
-  //   setSearchText(event.target.value);
+const DropDownSort: React.FC<IProps> = ({ sortText, setSortText }) => {
+  const handleChange = (event: { target: { value: string } }) =>
+    setSortText(event.target.value);
 
   return (
     <>

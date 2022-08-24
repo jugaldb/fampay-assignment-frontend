@@ -19,6 +19,7 @@ import Searchbar from "./SearchBar";
 
 export default function DisplayTable() {
   const [searchText, setSearchText] = useState<string>("");
+  const [sortText, setSortText] = useState<string>("");
   const [results, setResults] = useState<any[]>([]);
   const [pages, setPages] = useState<number>(0);
   const [offset, setOffset] = useState<number>(0);
@@ -90,7 +91,10 @@ export default function DisplayTable() {
         searchText={searchText}
         setSearchText={(text) => setSearchText(text)}
       />
-      <DropDownSort />
+      <DropDownSort
+        sortText={sortText}
+        setSortText={(text) => setSortText(text)}
+      />
 
       <Box padding={10}>
         <TableContainer>
