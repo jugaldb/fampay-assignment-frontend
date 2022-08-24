@@ -14,7 +14,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import ReactPaginate from "react-paginate";
 import "./DisplayTable.css";
-import DropDownSort from "./DropDownSort";
+import DropDownSort, { helpMap } from "./DropDownSort";
 import Searchbar from "./SearchBar";
 
 export default function DisplayTable() {
@@ -28,9 +28,14 @@ export default function DisplayTable() {
   const fetchResults = async () => {
     // setLoading(true);
     let limit = 10;
+    const sortOptions = helpMap[sortText];
     const url =
       process.env.REACT_APP_BACKEND_URL +
-      `/api/video?limit=${limit}&offset=${offset}`;
+      `/api/video?limit=${limit}&offset=${offset}${
+        sortText
+          ? `&orderBy=${sortOptions.orderBy}&orderType=${sortOptions.orderType}`
+          : ""
+      }`;
 
     try {
       const res = await axios.get(url);
@@ -52,9 +57,14 @@ export default function DisplayTable() {
   };
 
   const fetchSearchResults = async () => {
+    const sortOptions = helpMap[sortText];
     const url =
       process.env.REACT_APP_BACKEND_URL +
-      `/api/search?q=${searchText}&offset=${offset}`;
+      `/api/search?q=${searchText}&offset=${offset}${
+        sortText
+          ? `&orderBy=${sortOptions.orderBy}&orderType=${sortOptions.orderType}`
+          : ""
+      }`;
 
     try {
       const res = await axios.get(url);
@@ -79,7 +89,7 @@ export default function DisplayTable() {
     } else {
       fetchResults();
     }
-  }, [searchText, offset]);
+  }, [searchText, offset, sortText]);
 
   // useEffect(() => {
   //   fetchResults();
